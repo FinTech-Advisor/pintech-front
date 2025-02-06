@@ -2,7 +2,7 @@
 import { format } from 'date-fns'
 import { redirect } from 'next/navigation'
 
-export const processJoin = async (parms, formData: FormData) => {
+export const processJoin = async (params, formData: FormData) => {
   //   const redirectUrl = parms?.get('redirectUrl') ?? '/memeber/login'
   const redirectUrl = '/member/login'
   const form = {},
@@ -33,4 +33,6 @@ export const processJoin = async (parms, formData: FormData) => {
   console.log('form', form)
   redirect(redirectUrl)
 }
-export const processLogin = async (parms, formData: FormData) => {}
+export const processLogin = async (params, formData: FormData) => {}
+export const processFindPassword = async (params, formData: FormData) => {}
+export const processExists = async (params, formData: FormData) => {}
