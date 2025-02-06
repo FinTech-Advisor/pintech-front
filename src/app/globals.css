@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+* {
+  font-family: 'Nanum Gothic', serif;
+  box-sizing: border-box;
+  outline: none;
+}
+
+html {
+  font-size: 13px;
+  color: #000;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+img {
+  border: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li,
+dl,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* 공통 */
+.layout-width {
+  max-width: 1300px;
+  min-width: 1000px;
+  margin: 0 auto;
+}
+
+.main-content {
+  min-height: 600px;
+}
