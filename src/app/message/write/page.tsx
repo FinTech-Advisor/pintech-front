@@ -1,5 +1,4 @@
-import WriteContainer from './containers/WriteContainer'
 const WritePage = () => {
-  return <WriteContainer />
+  return <h1>쪽지 작성</h1>
 }
 export default WritePage

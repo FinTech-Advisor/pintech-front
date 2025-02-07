@@ -1,5 +1,4 @@
-import ViewContainer from './containers/ViewContainer'
 const ViewPage = () => {
-  return <ViewContainer />
+  return <h1>단일조회</h1>
 }
 export default ViewPage

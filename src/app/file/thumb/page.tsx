@@ -1,5 +1,4 @@
-import ThumbContainer from './containers/ThumbContainer'
 const ThumbPage = () => {
-  return <ThumbContainer />
+  return <h1>썸네일 생성</h1>
 }
 export default ThumbPage
