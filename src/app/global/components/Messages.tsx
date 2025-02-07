@@ -29,7 +29,10 @@ const Message = styled.div`
 const Messages = ({ children, color }) => {
   if (!children) return <></>
 
-  const messages = Array.isArray(children) ? children : [children]
+  let messages = Array.isArray(children) ? children : [children]
+
+  messages = messages.filter((s) => s && ('' + s)?.trim())
+  if (messages.length === 0) return <></>
 
   return messages.map((message, i) => (
     <Message key={message + '_' + i} color={color}>

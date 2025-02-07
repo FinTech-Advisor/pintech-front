@@ -19,7 +19,7 @@
     "react-helmet-async": "^2.0.5",
     "react-icons": "^5.4.0",
     "sass": "^1.83.4",
-    "styled-components": "^6.1.15"
+    "styled-components": "^6.1.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

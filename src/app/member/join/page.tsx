@@ -1,4 +1,4 @@
-import JoinContainer from './containers/JoinContainer'
+import JoinContainer from '../containers/JoinContainer'
 import { MainTitle } from '@/app/global/components/StyledTitle'
 import { MainContentBox } from '@/app/global/components/ContentBox'
 
