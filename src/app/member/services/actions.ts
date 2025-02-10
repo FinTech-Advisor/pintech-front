@@ -190,7 +190,118 @@ export const getUserInfo = async () => {
   } catch (err) {}
 }
 
-export const processFindPassword = async (params, formData: FormData) => {}
-export const processChangePassword = async (params, formData: FormData) => {}
+export const processFindPassword = async (params, formData: FormData) => {
+  const email = formData.get('email')
+  let errors = {}
+  let hasErrors = false
+
+  if (!email || !email.trim()) {
+    errors.email = errors.email ?? []
+    errors.email.push('이메일을 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!hasErrors) {
+    const apiUrl = process.env.API_URL + '/member/find/password'
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      if (res.status !== 200) {
+        const result = await res.json()
+        errors = result.message
+        hasErrors = true
+      }
+    } catch (err) {
+      console.error(err)
+      errors.email = ['서버 오류가 발생했습니다.']
+      hasErrors = true
+    }
+  }
+
+  if (hasErrors) {
+    return errors
+  }
+
+  return {
+    success: true,
+    message: '비밀번호 재설정 링크가 이메일로 전송되었습니다.',
+  }
+}
+
+export const processChangePassword = async (params, formData: FormData) => {
+  const currentPassword = formData.get('currentPassword')
+  const newPassword = formData.get('newPassword')
+  const confirmPassword = formData.get('confirmPassword')
+  let errors = {}
+  let hasErrors = false
+
+  // 필수 항목 검증
+  if (!currentPassword || !currentPassword.trim()) {
+    errors.currentPassword = errors.currentPassword ?? []
+    errors.currentPassword.push('현재 비밀번호를 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!newPassword || !newPassword.trim()) {
+    errors.newPassword = errors.newPassword ?? []
+    errors.newPassword.push('새 비밀번호를 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!confirmPassword || !confirmPassword.trim()) {
+    errors.confirmPassword = errors.confirmPassword ?? []
+    errors.confirmPassword.push('비밀번호 확인을 입력하세요.')
+    hasErrors = true
+  }
+
+  if (newPassword !== confirmPassword) {
+    errors.confirmPassword = errors.confirmPassword ?? []
+    errors.confirmPassword.push(
+      '새 비밀번호와 비밀번호 확인이 일치하지 않습니다.',
+    )
+    hasErrors = true
+  }
+
+  // 서버 요청 처리
+  if (!hasErrors) {
+    const apiUrl = process.env.API_URL + '/member/change/password'
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      })
+
+      if (res.status !== 200) {
+        const result = await res.json()
+        errors = result.message || '서버 오류가 발생했습니다.'
+        hasErrors = true
+      }
+    } catch (err) {
+      console.error(err)
+      errors = '서버와의 연결에 실패했습니다.'
+      hasErrors = true
+    }
+  }
+
+  // 에러가 있을 경우 반환
+  if (hasErrors) {
+    return errors
+  }
+
+  return {
+    success: true,
+    message: '비밀번호가 성공적으로 변경되었습니다.',
+  }
+}
+
 export const processSignOut = async (params, formData: FormData) => {}
 export const processModify = async (params, formData: FormData) => {}

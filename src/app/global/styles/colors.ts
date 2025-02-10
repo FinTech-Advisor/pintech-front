@@ -12,7 +12,7 @@ const colors = {
 export const buttonColors = {
   primary: [colors.primary, colors.white],
   secondary: [colors.secondary, colors.white],
-  sucess: [colors.success, colors.white],
+  success: [colors.success, colors.white],
   danger: [colors.danger, colors.white],
   warning: [colors.warning, colors.dark],
   info: [colors.info, colors.dark],

@@ -6,7 +6,7 @@ export const TinyButton = styled.button`
 export const SmallButton = styled.button`
   ${commonStyle}
 `
-export const Button = styled.button`
+export const NormalButton = styled.button`
   ${commonStyle}
 `
 export const MediumButton = styled.button`
@@ -24,7 +24,7 @@ export const ButtonGroup = styled.div`
   ${({ width }) =>
     width &&
     css`
-      width: ${width};
+      width: ${width}px;
     `}
   button {
     width: 0;
