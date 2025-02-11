@@ -11,6 +11,7 @@ const StyledForm = styled.form`
   button {
     background-color: ${buttonColors.dark[0]};
     border: none;
+    margin-top: 10px;
     color: ${buttonColors.dark[1]};
     width: 100%;
     height: 40px;
