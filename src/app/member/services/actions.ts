@@ -303,5 +303,130 @@ export const processChangePassword = async (params, formData: FormData) => {
   }
 }
 
-export const processSignOut = async (params, formData: FormData) => {}
-export const processModify = async (params, formData: FormData) => {}
+// 회원 상태 업데이트 (소프트 탈퇴: SetDeletedAt 업데이트)
+export const updateUserStatus = async ({
+  userId,
+  deletedAt,
+}: {
+  userId: string
+  deletedAt: Date
+}) => {
+  try {
+    const response = await fetch('/api/user/status', {
+      method: 'PATCH', // HTTP 메서드는 PATCH (부분 업데이트)
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터로 전송
+      },
+      body: JSON.stringify({ userId, deletedAt }), // 요청 본문에 사용자 ID와 삭제 날짜를 JSON 형식으로 전송
+    })
+
+    if (!response.ok) {
+      throw new Error('회원 상태 업데이트 실패')
+    }
+
+    return await response.json() // 성공적으로 처리된 응답을 JSON으로 반환
+  } catch (error) {
+    console.error('회원 상태 업데이트 실패:', error)
+    throw new Error('회원 상태 업데이트 실패') // 실패 시 오류를 던짐
+  }
+}
+
+// 회원 탈퇴 처리 (소프트 탈퇴)
+export const processSignOut = async ({ userId }: { userId: string }) => {
+  try {
+    const response = await fetch('/api/user/signout', {
+      method: 'POST', // HTTP 메서드는 POST (회원 탈퇴 요청)
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터로 전송
+      },
+      body: JSON.stringify({ userId }), // 요청 본문에 사용자 ID를 JSON 형식으로 전송
+    })
+
+    if (!response.ok) {
+      throw new Error('회원 탈퇴 처리 실패')
+    }
+
+    return await response.json() // 성공적으로 처리된 응답을 JSON으로 반환
+  } catch (error) {
+    console.error('회원 탈퇴 처리 실패:', error)
+    throw new Error('회원 탈퇴 처리 실패') // 실패 시 오류를 던짐
+  }
+}
+
+export const processModify = async (params, formData: FormData) => {
+  const name = formData.get('name')
+  const phoneNumber = formData.get('phoneNumber')
+  const address = formData.get('address')
+  const addressSub = formData.get('addressSub')
+  const optionalTerms = formData.get('optionalTerms')
+  const authorities = formData.get('authorities')
+
+  let errors = {}
+  let hasErrors = false
+
+  // 필수 항목 검증
+  if (!name || !name.trim()) {
+    errors.name = errors.name ?? []
+    errors.name.push('이름을 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!phoneNumber || !phoneNumber.trim()) {
+    errors.phoneNumber = errors.phoneNumber ?? []
+    errors.phoneNumber.push('휴대폰번호를 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!address || !address.trim()) {
+    errors.address = errors.address ?? []
+    errors.address.push('주소를 입력하세요.')
+    hasErrors = true
+  }
+
+  if (!optionalTerms || !optionalTerms.trim()) {
+    errors.optionalTerms = errors.optionalTerms ?? []
+    errors.optionalTerms.push('광고성 정보 전송 동의 여부를 확인하세요.')
+    hasErrors = true
+  }
+
+  // 서버 요청 처리
+  if (!hasErrors) {
+    const apiUrl = process.env.API_URL + '/member/modify'
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          phoneNumber,
+          address,
+          addressSub,
+          optionalTerms,
+          authorities,
+        }),
+      })
+
+      if (res.status !== 200) {
+        const result = await res.json()
+        errors = result.message || '서버 오류가 발생했습니다.'
+        hasErrors = true
+      }
+    } catch (err) {
+      console.error(err)
+      errors = '서버와의 연결에 실패했습니다.'
+      hasErrors = true
+    }
+  }
+
+  // 에러가 있을 경우 반환
+  if (hasErrors) {
+    return errors
+  }
+
+  return {
+    success: true,
+    message: '회원정보가 성공적으로 수정되었습니다.',
+  }
+}
