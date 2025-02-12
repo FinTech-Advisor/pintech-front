@@ -14,7 +14,7 @@ export default function WithUserContainer(UserContainer) {
     <UserContainer />
   ) : (
     <MainContentBox max={450} min={350}>
-      <MainTitle>로그인</MainTitle>
+      <h1>로그인</h1>
       <LoginContainer redirectUrl={redirectUrl} />
     </MainContentBox>
   )

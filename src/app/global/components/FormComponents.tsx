@@ -2,6 +2,8 @@
 import { styled, css } from 'styled-components'
 import colors from '../styles/colors'
 import sizes from '../styles/sizes'
+import { CommonType } from '../types/StyledType'
+
 const { light, dark } = colors
 const { normal } = sizes
 const commonStyle = css`
@@ -15,7 +17,7 @@ const commonStyle = css`
   width: 100%;
   padding: 0 10px;
 `
-export const Input = styled.input`
+export const Input = styled.input<CommonType>`
   ${commonStyle}
   height: 40px;
   border-color: ${({ color }) => (color ? colors[color] ?? light : light)};
@@ -23,7 +25,7 @@ export const Input = styled.input`
     width: ${width}px;
   `}
 `
-export const Textarea = styled.textarea`
+export const Textarea = styled.textarea<CommonType>`
   ${commonStyle}
   height: 150px;
   resize: none;
@@ -32,7 +34,7 @@ export const Textarea = styled.textarea`
   ${({ width }) => css`
     width: ${width}px;
   `}
-  ${({ heigth }) => css`
-    heigth: ${heigth}px;
+  ${({ height }) => css`
+    heigth: ${height}px;
   `}
 `

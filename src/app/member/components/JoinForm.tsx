@@ -1,78 +1,218 @@
-'use client' // Make sure to add 'use client' if this is in a client-side component
-
 import React from 'react'
-import { MediumButton } from '@/app/global/components/Buttons'
-import { Input } from '@/app/global/components/FormComponents'
-import Messages from '@/app/global/components/Messages'
-import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md'
+import styled from 'styled-components'
+import {
+  MdRadioButtonUnchecked,
+  MdRadioButtonChecked,
+  MdCheckBoxOutlineBlank,
+  MdCheckBox,
+} from 'react-icons/md'
 
-const SignOutForm = ({ form, onChange, onClick, onSubmit, actionState }) => {
-  console.log('Current form state:', form) // Debugging: form state 확인
+import { Input } from '@/app/global/components/FormComponents'
+import { SmallButton, BigButton } from '@/app/global/components/Buttons'
+import Messages from '@/app/global/components/Messages'
+import DatePicker from 'react-datepicker'
+
+const StyledForm = styled.form``
+
+const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
+  const [errors, formAction, isPending] = actionState
 
   return (
-    <form onSubmit={onSubmit} autoComplete="off">
-      {/* 사용자 ID 입력 */}
-      <div className="input-group">
+    <>
+      <StyledForm action={formAction} autoComplete="off">
+        <input type="hidden" name="gender" defaultValue={form?.gender ?? ''} />
+        <input
+          type="hidden"
+          name="birthDt"
+          defaultValue={form?.birthDt ?? ''}
+        />
+        <input
+          type="hidden"
+          name="requiredTerms1"
+          defaultValue={form?.requiredTerms1 ?? false}
+        />
+        <input
+          type="hidden"
+          name="requiredTerms2"
+          defaultValue={form?.requiredTerms2 ?? false}
+        />
+        <input
+          type="hidden"
+          name="requiredTerms3"
+          defaultValue={form?.requiredTerms3 ?? false}
+        />
+        <input
+          type="hidden"
+          name="optionalTerms"
+          defaultValue={form?.optionalTerms ?? ''}
+        />
         <Input
           type="text"
-          name="userId"
-          placeholder="사용자 ID"
-          value={form.userId}
+          name="email"
+          placeholder="이메일"
+          color="dark"
+          value={form?.email ?? ''}
           onChange={onChange}
-          style={{ padding: '8px', width: '100%', fontSize: '16px' }}
         />
-      </div>
-      <Messages color="danger">{actionState?.errors?.userId}</Messages>
+        <Messages color="danger">{errors?.email}</Messages>
 
-      {/* 탈퇴 방식 선택 */}
-      <div className="delete-type">
-        <div
-          className="delete-option"
-          onClick={() => {
-            // 상태 변경 여부 확인
-            onClick('deleteType', form.deleteType === 'soft' ? '' : 'soft')
-          }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            padding: '10px 0',
-            fontSize: '16px',
-            marginBottom: '10px',
-          }}
-        >
-          {form.deleteType === 'soft' ? (
-            <MdCheckBox size={24} style={{ marginRight: '8px' }} />
-          ) : (
-            <MdCheckBoxOutlineBlank size={24} style={{ marginRight: '8px' }} />
-          )}
-          소프트 탈퇴 (정보 보존)
+        <Input
+          type="password"
+          name="password"
+          placeholder="비밀번호"
+          color="dark"
+          value={form?.password ?? ''}
+          onChange={onChange}
+        />
+        <Messages color="danger">{errors?.password}</Messages>
+
+        <Input
+          type="password"
+          name="confirmPassword"
+          placeholder="비밀번호 확인"
+          color="dark"
+          value={form?.confirmPassword ?? ''}
+          onChange={onChange}
+        />
+        <Messages color="danger">{errors?.confirmPassword}</Messages>
+
+        <Input
+          type="text"
+          name="name"
+          placeholder="이름"
+          color="dark"
+          value={form?.name ?? ''}
+          onChange={onChange}
+        />
+        <Messages color="danger">{errors?.name}</Messages>
+
+        <div className="address-row">
+          <Input
+            type="text"
+            name="zipCode"
+            placeholder="우편번호"
+            color="dark"
+            value={form?.zipCode ?? ''}
+            onChange={onChange}
+          />
+          <SmallButton type="button">주소찾기</SmallButton>
         </div>
-      </div>
 
-      <Messages color="danger">{actionState?.errors?.deleteType}</Messages>
+        <Input
+          type="text"
+          name="address"
+          placeholder="집주소"
+          color="dark"
+          value={form?.address ?? ''}
+          onChange={onChange}
+        />
+        <Input
+          type="text"
+          name="addressSub"
+          placeholder="나머지 주소"
+          color="dark"
+          value={form?.addressSub ?? ''}
+          onChange={onChange}
+        />
+        <Messages color="danger">{errors?.address}</Messages>
 
-      {/* 탈퇴 처리 버튼 */}
-      <div className="submit-button">
-        <MediumButton
-          type="submit"
-          disabled={actionState?.isLoading}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: buttonColors.primary,
-            color: '#fff',
-            fontSize: '16px',
-            cursor: 'pointer',
-            borderRadius: '5px',
-            width: '100%',
-            marginTop: '10px',
-          }}
-        >
-          {actionState?.isLoading ? '탈퇴 처리 중...' : '탈퇴 처리'}
-        </MediumButton>
-      </div>
-    </form>
+        <Input
+          type="text"
+          name="phoneNumber"
+          placeholder="휴대폰번호"
+          value={form?.phoneNumber ?? ''}
+          onChange={onChange}
+          color="dark"
+        />
+        <Messages color="danger">{errors?.phoneNumber}</Messages>
+
+        <div className="row">
+          <div className="tit">성별</div>
+          <div className="radio-buttons">
+            <span onClick={() => onClick('gender', 'FEMALE')}>
+              {form?.gender === 'FEMALE' ? (
+                <MdRadioButtonChecked />
+              ) : (
+                <MdRadioButtonUnchecked />
+              )}
+              여성
+            </span>
+            <span onClick={() => onClick('gender', 'MALE')}>
+              {form?.gender === 'MALE' ? (
+                <MdRadioButtonChecked />
+              ) : (
+                <MdRadioButtonUnchecked />
+              )}
+              남성
+            </span>
+          </div>
+        </div>
+        <Messages color="danger">{errors?.gender}</Messages>
+
+        <div className="row">
+          <div className="tit">생년월일</div>
+          <div>
+            <DatePicker
+              selected={form?.birthDt ?? ''}
+              onChange={(date: Date | null) => onSelectDate(date)}
+            />
+          </div>
+        </div>
+        <Messages color="danger">{errors?.birthDt}</Messages>
+
+        <div className="terms">
+          <div
+            className="terms-row"
+            onClick={() =>
+              onClick('requiredTerms1', !Boolean(form?.requiredTerms1))
+            }
+          >
+            {form?.requiredTerms1 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            이용약관에 동의합니다.
+          </div>
+          <Messages color="danger">{errors?.requiredTerms1}</Messages>
+
+          <div
+            className="terms-row"
+            onClick={() =>
+              onClick('requiredTerms2', !Boolean(form?.requiredTerms2))
+            }
+          >
+            {form?.requiredTerms2 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            개인정보 처리방침에 동의합니다.
+          </div>
+          <Messages color="danger">{errors?.requiredTerms2}</Messages>
+
+          <div
+            className="terms-row"
+            onClick={() =>
+              onClick('requiredTerms3', !Boolean(form?.requiredTerms3))
+            }
+          >
+            {form?.requiredTerms3 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            개인정보 수집 및 이용에 동의합니다.
+          </div>
+          <Messages color="danger">{errors?.requiredTerms3} </Messages>
+
+          <div
+            className="terms-row"
+            onClick={() =>
+              onClick(
+                'optionalTerms',
+                form?.optionalTerms ? '' : 'advertisement',
+              )
+            }
+          >
+            {form?.optionalTerms ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            광고성 정보 전송에 동의합니다.(선택)
+          </div>
+        </div>
+        <BigButton type="submit" className="submit-btn" disabled={isPending}>
+          가입하기
+        </BigButton>
+      </StyledForm>
+    </>
   )
 }
 
-export default React.memo(SignOutForm)
+export default React.memo(JoinForm)
