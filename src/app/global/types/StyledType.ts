@@ -1,8 +1,11 @@
+import colors from "../styles/colors"
+const {dark} = colors
+
 export type CommonType = {
   children?: React.ReactNode | string[] | string
   width?: number | string
   height?: number | string
-  color?: string | undefined
+  color?: string
   min?: number
   max?: number
   type?: string | undefined

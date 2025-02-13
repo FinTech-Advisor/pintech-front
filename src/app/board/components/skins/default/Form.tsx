@@ -2,7 +2,7 @@
 import React from 'react'
 import { MainContentBox } from '@/app/global/components/ContentBox'
 import { MainTitle } from '@/app/global/components/StyledTitle'
-import ReactQuill from 'react-quill-new'
+
 import styled from 'styled-components'
 import { CommonType } from '@/app/global/types/StyledType'
 import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md'
@@ -10,6 +10,7 @@ import { Input, Textarea } from '@/app/global/components/FormComponents'
 import { BigButton } from '@/app/global/components/Buttons'
 import Messages from '@/app/global/components/Messages'
 import useUser from '@/app/global/hooks/useUser'
+import Editor from '@/app/global/components/Editor'
 
 const StyledForm = styled.form<CommonType>``
 
@@ -22,7 +23,7 @@ const Form = ({
   onClick,
 }) => {
   const [errors, formAction, isPending] = actionState
-  const { useEditor } = board
+  const { useEditor, useEditorImage, useAttachFile } = board
   const { isLogin, isAdmin } = useUser()
 
   return (
@@ -32,6 +33,7 @@ const Form = ({
         <StyledForm action={formAction} autoComplete="off">
           <input type="hidden" name="bid" value={board?.bid ?? ''} />
           <input type="hidden" name="gid" value={data?.gid ?? ''} />
+          <input type="hidden" name="content" value={data?.content ?? ''}/>
           <Messages color="danger">{errors?.bid}</Messages>
           <Messages color="danger">{errors?.gid}</Messages>
           <Messages color="danger">{errors?.global}</Messages>
@@ -79,11 +81,7 @@ const Form = ({
 
           <div className="row content-row">
             {useEditor ? (
-              <ReactQuill
-                theme="snow"
-                value={data?.content ?? ''}
-                onChange={onEditorChange}
-              />
+              <Editor onChange={onEditorChange} height={350} useImage={useEditorImage} gid={data?.gid} location="editor"/>
             ) : (
               <Textarea
                 name="content"

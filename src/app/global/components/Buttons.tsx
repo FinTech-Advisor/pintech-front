@@ -53,7 +53,7 @@ export const TinyButton = styled.button<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
 
 export const SmallButton = styled.button<CommonType>`
@@ -66,7 +66,7 @@ export const SmallButton = styled.button<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
 
 export const Button = styled.button<CommonType>`
@@ -78,7 +78,7 @@ export const Button = styled.button<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
 
 export const MediumButton = styled.button<CommonType>`
@@ -91,7 +91,7 @@ export const MediumButton = styled.button<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
 
 export const BigButton = styled.button<CommonType>`
@@ -104,7 +104,7 @@ export const BigButton = styled.button<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
 
 export const ExtraButton = styled.button<CommonType>`
@@ -117,7 +117,7 @@ export const ExtraButton = styled.button<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
 
 export const ButtonGroup = styled.div<CommonType>`
@@ -143,5 +143,5 @@ export const ButtonGroup = styled.div<CommonType>`
       width: ${width}px;
     `}
 
-  ${({ color }) => changeColor(color)}
+  ${({ color }) => changeColor(color || '')}
 `
