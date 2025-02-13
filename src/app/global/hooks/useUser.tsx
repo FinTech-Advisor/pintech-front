@@ -5,8 +5,8 @@ import { getUserInfo } from '../../member/services/actions'
 
 export default function useUser() {
   const {
-    state: { userInfo, isLogin, isAdmin },
-    actions: { setUserInfo, setIsLogin, setIsAdmin },
+    state: { userInfo, isLogin },
+    actions: { setUserInfo, setIsLogin },
   } = useContext(UserContext)
 
   useEffect(() => {
@@ -16,11 +16,10 @@ export default function useUser() {
         if (_userInfo) {
           setUserInfo(_userInfo)
           setIsLogin(_userInfo ? true : false)
-          setIsAdmin(_userInfo && _userInfo._authorities.includes('ADMIN'))
         }
       })()
     }
-  }, [userInfo, setUserInfo, setIsLogin, setIsAdmin])
+  }, [userInfo, setUserInfo, setIsLogin ])
 
-  return { userInfo, isLogin, isAdmin }
+  return { userInfo, isLogin }
 }

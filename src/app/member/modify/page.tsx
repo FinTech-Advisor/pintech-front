@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { processModify } from '@/app/member/services/actions'
 import { MainContentBox } from '@/app/global/components/ContentBox'
 import { MainTitle } from '@/app/global/components/StyledTitle'
+import classNames from 'classnames'
 
 const ModifyPage = () => {
   const searchParams = useSearchParams()
@@ -47,7 +48,7 @@ const ModifyPage = () => {
   return (
     <>
       <MainContentBox max={650} min={550}>
-        <MainTitle>회원정보 수정</MainTitle>
+        <MainTitle className={classNames}>회원정보 수정</MainTitle>
         <ModifyContainer
           actionState={actionState}
           form={form}

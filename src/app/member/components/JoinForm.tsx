@@ -53,7 +53,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
           value={form?.email ?? ''}
           onChange={onChange}
         />
-        <Messages color="danger">{errors?.emil}</Messages>
+        <Messages color="danger">{errors?.email}</Messages>
         <Input
           type="password"
           name="password"
@@ -90,10 +90,8 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
             value={form?.zipCode ?? ''}
             onChange={onChange}
           />
-
           <SmallButton type="button">주소찾기</SmallButton>
         </div>
-
         <Input
           type="text"
           name="address"
@@ -102,7 +100,6 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
           value={form?.address ?? ''}
           onChange={onChange}
         />
-
         <Input
           type="text"
           name="addressSub"
@@ -119,7 +116,6 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
           color="dark"
           value={form?.phoneNumber ?? ''}
           onChange={onChange}
-          color="dark"
         />
         <Messages color="danger">{errors?.phoneNumber}</Messages>
         <div className="row">
@@ -130,7 +126,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
                 <MdRadioButtonChecked />
               ) : (
                 <MdRadioButtonUnchecked />
-              )}
+              )}{' '}
               여성
             </span>
             <span onClick={() => onClick('gender', 'MALE')}>
@@ -138,7 +134,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
                 <MdRadioButtonChecked />
               ) : (
                 <MdRadioButtonUnchecked />
-              )}
+              )}{' '}
               남성
             </span>
           </div>
@@ -161,7 +157,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
               onClick('requiredTerms1', !Boolean(form?.requiredTerms1))
             }
           >
-            {form?.requiredTerms1 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            {form?.requiredTerms1 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}{' '}
             이용약관에 동의합니다.
           </div>
           <Messages color="danger">{errors?.requiredTerms1}</Messages>
@@ -171,7 +167,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
               onClick('requiredTerms2', !Boolean(form?.requiredTerms2))
             }
           >
-            {form?.requiredTerms2 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            {form?.requiredTerms2 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}{' '}
             개인정보 처리방침에 동의합니다.
           </div>
           <Messages color="danger">{errors?.requiredTerms2}</Messages>
@@ -181,7 +177,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
               onClick('requiredTerms3', !Boolean(form?.requiredTerms3))
             }
           >
-            {form?.requiredTerms3 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            {form?.requiredTerms3 ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}{' '}
             개인정보 수집 및 이용에 동의합니다.
           </div>
           <Messages color="danger">{errors?.requiredTerms3}</Messages>
@@ -194,7 +190,7 @@ const JoinForm = ({ form, onClick, onChange, onSelectDate, actionState }) => {
               )
             }
           >
-            {form?.optionalTerms ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+            {form?.optionalTerms ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}{' '}
             광고성 정보 전송에 동의합니다.(선택)
           </div>
         </div>

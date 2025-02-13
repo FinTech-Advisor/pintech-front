@@ -9,6 +9,7 @@ const colors = {
   dark: '#212529',
   white: '#fff',
 }
+
 export const buttonColors = {
   primary: [colors.primary, colors.white],
   secondary: [colors.secondary, colors.white],
@@ -19,4 +20,5 @@ export const buttonColors = {
   light: [colors.light, colors.dark],
   dark: [colors.dark, colors.white],
 }
+
 export default colors

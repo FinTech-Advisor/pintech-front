@@ -5,17 +5,26 @@ import { cookies } from 'next/headers'
 import apiRequest from '@/app/global/libs/apiRequest'
 import { revalidatePath } from 'next/cache'
 
-export const processJoin = async (params, formData: FormData) => {
+interface FormDataEntries {
+  [key: string]: string | boolean
+}
+
+export const processJoin = async (
+  params: { redirectUrl?: string },
+  formData: FormData,
+) => {
   const redirectUrl = params?.redirectUrl ?? '/member/login'
 
-  const form = {}
-  let errors = {}
+  const form: FormDataEntries = {}
+  let errors: Record<string, string[]> = {}
   let hasErrors = false
 
-  for (let [key, value] of formData.entries()) {
+  for (const [key, rawValue] of formData.entries()) {
     if (key.includes('$ACTION')) continue
 
-    if (key === 'birthDt' && value && value.trim()) {
+    let value: string | boolean = rawValue as string
+
+    if (key === 'birthDt' && value.trim()) {
       value = format(new Date(value), 'yyyy-MM-dd')
     }
 
@@ -26,8 +35,7 @@ export const processJoin = async (params, formData: FormData) => {
     form[key] = value
   }
 
-  // 필수 항목 검증 S
-  const requiredFields = {
+  const requiredFields: Record<string, string> = {
     email: '이메일을 입력하세요.',
     name: '이름을 입력하세요.',
     password: '비밀번호를 입력하세요.',
@@ -51,34 +59,24 @@ export const processJoin = async (params, formData: FormData) => {
     }
   }
 
-  // 주소 항목 검증
-  if (
-    !form.zipCode ||
-    !form.zipCode?.trim() ||
-    !form.address ||
-    !form.address?.trim()
-  ) {
+  if (!form.zipCode?.toString().trim() || !form.address?.toString().trim()) {
     errors.address = errors.address ?? []
     errors.address.push('주소를 입력하세요.')
     hasErrors = true
   }
-  // 필수 항목 검증 E
-  // 비밀번호와 비밀번호 확인 일치여부
-  if (form?.password && form?.password !== form?.confirmPassword) {
+
+  if (form.password && form.password !== form.confirmPassword) {
     errors.confirmPassword = errors.confirmPassword ?? []
     errors.confirmPassword.push('비밀번호가 일치하지 않습니다.')
     hasErrors = true
   }
 
-  /* 서버 요청 처리 S */
   if (!hasErrors) {
-    const apiUrl = process.env.API_URL + '/member/join'
+    const apiUrl = `${process.env.API_URL}/member/join`
     try {
       const res = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       })
 
@@ -86,20 +84,17 @@ export const processJoin = async (params, formData: FormData) => {
         const result = await res.json()
         errors = result.message
       }
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
     }
   }
-  /* 서버 요청 처리 E */
 
   if (hasErrors) {
     return errors
   }
 
-  // 회원 가입 완료 후 이동
   redirect(redirectUrl)
 }
-
 /**
  * 로그인 처리
  *
@@ -187,7 +182,9 @@ export const getUserInfo = async () => {
       const result = await res.json()
       return result.success && result.data
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const processFindPassword = async (params, formData: FormData) => {
