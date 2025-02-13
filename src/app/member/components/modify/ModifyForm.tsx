@@ -15,9 +15,39 @@ const StyledForm = styled.form`
     height: 40px;
     margin-top: 10px;
   }
+
+  .terms-row {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    cursor: pointer;
+  }
 `
 
-const ModifyForm = ({ form, onChange, errors, onSubmit, onClick }) => {
+interface ModifyFormProps {
+  form: {
+    name: string
+    phoneNumber: string
+    address: string
+    optionalTerms: string
+    zipCode: string
+    addressSub: string
+  }
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+  errors: Record<string, string>
+  onSubmit: React.FormEventHandler<HTMLFormElement>
+  onClick: (field: string, value: string) => void
+  isPending: boolean // Add isPending here
+}
+
+const ModifyForm: React.FC<ModifyFormProps> = ({
+  form,
+  onChange,
+  errors,
+  onSubmit,
+  onClick,
+  isPending, // Destructure it here
+}) => {
   return (
     <StyledForm onSubmit={onSubmit} autoComplete="off">
       {/* Name Input */}
@@ -30,39 +60,6 @@ const ModifyForm = ({ form, onChange, errors, onSubmit, onClick }) => {
         onChange={onChange}
       />
       <Messages color="danger">{errors?.name}</Messages>
-
-      {/* Email Input */}
-      <Input
-        type="email"
-        name="email"
-        placeholder="이메일"
-        color="dark"
-        value={form?.email ?? ''}
-        onChange={onChange}
-      />
-      <Messages color="danger">{errors?.email}</Messages>
-
-      {/* Password Input */}
-      <Input
-        type="password"
-        name="password"
-        placeholder="비밀번호"
-        color="dark"
-        value={form?.password ?? ''}
-        onChange={onChange}
-      />
-      <Messages color="danger">{errors?.password}</Messages>
-
-      {/* Confirm Password Input */}
-      <Input
-        type="password"
-        name="confirmPassword"
-        placeholder="비밀번호 확인"
-        color="dark"
-        value={form?.confirmPassword ?? ''}
-        onChange={onChange}
-      />
-      <Messages color="danger">{errors?.confirmPassword}</Messages>
 
       {/* Zip Code Input */}
       <Input
@@ -119,9 +116,10 @@ const ModifyForm = ({ form, onChange, errors, onSubmit, onClick }) => {
         광고성 정보 전송에 동의합니다.(선택)
       </div>
 
-      <Messages color="danger">{errors?.optionalTerms}</Messages>
-
-      <MediumButton type="submit">회원정보 수정</MediumButton>
+      {/* 버튼을 isPending 상태에 따라 변경 */}
+      <MediumButton type="submit" disabled={isPending}>
+        {isPending ? '처리 중...' : '회원정보 수정'}
+      </MediumButton>
     </StyledForm>
   )
 }

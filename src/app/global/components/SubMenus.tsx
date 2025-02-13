@@ -32,9 +32,11 @@ const StyledMenu = styled.nav`
 
 const SubMenus = () => {
   const [menus, setMenus] = useState([])
+
+  // Default to empty strings if state or properties are undefined
   const {
-    state: { menuCode, subMenuCode },
-  } = useContext(CommonContext)
+    state: { menuCode = '', subMenuCode = '' } = {}, // Default state to empty object if undefined
+  } = useContext(CommonContext) || {} // Ensure CommonContext is not undefined
 
   useEffect(() => {
     setMenus(() => getMenus(menuCode))

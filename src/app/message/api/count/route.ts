@@ -1,8 +1,8 @@
-// src/app/member/api/count/route.ts
-import { NextRequest, NextResponse } from 'next/server'
+// src/app/message/api/count/route.ts
+import { NextResponse } from 'next/server'
 import { MessageService } from '@/app/message/services/MessageService' // 예시로 MessageService 사용
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // 쪽지 미열람 개수 조회 로직 (DB 조회 필요)
     const unreadCount = await MessageService.getUnreadMessagesCount()

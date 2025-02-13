@@ -3,7 +3,7 @@
 import React from 'react'
 import Messages from '@/app/global/components/Messages'
 import styled from 'styled-components'
-import { MediumButton } from '@/app/global/components/Buttons' // ButtonGroup 삭제
+import { MediumButton } from '@/app/global/components/Buttons'
 import { Input } from '@/app/global/components/FormComponents'
 import { buttonColors } from '@/app/global/styles/colors'
 
@@ -18,8 +18,27 @@ const StyledForm = styled.form`
   }
 `
 
-const FindPasswordForm = ({ form, onChange, actionState }) => {
+interface FindPasswordFormProps {
+  form?: {
+    email: string
+  }
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+  actionState: [
+    Record<string, string>, // errors
+    string | ((formData: FormData) => void | Promise<void>), // formAction
+    boolean, // isPending
+  ]
+}
+
+const FindPasswordForm: React.FC<FindPasswordFormProps> = ({
+  form = { email: '' },
+  onChange = () => {},
+  actionState = [{}, () => {}, false],
+}) => {
   const [errors, formAction, isPending] = actionState
+
+  // errors가 undefined일 경우 빈 객체로 초기화
+  const safeErrors = errors || {}
 
   return (
     <StyledForm action={formAction} autoComplete="off">
@@ -28,10 +47,12 @@ const FindPasswordForm = ({ form, onChange, actionState }) => {
         name="email"
         placeholder="이메일"
         color="dark"
-        value={form?.email ?? ''}
+        value={form.email ?? ''}
         onChange={onChange}
       />
-      <Messages color="danger">{errors?.email}</Messages>
+      {/* errors.email이 undefined일 경우 안전하게 처리 */}
+      <Messages color="danger">{safeErrors?.email}</Messages>{' '}
+      {/* optional chaining 사용 */}
       <MediumButton type="submit" disabled={isPending}>
         비밀번호 찾기
       </MediumButton>

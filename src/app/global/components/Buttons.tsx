@@ -18,15 +18,17 @@ const commonStyle = css`
   }
 `
 
-function changeColor(color: string) {
-  const selected = color && buttonColors[color]
+function changeColor(color: string | undefined) {
+  // color가 undefined일 경우 기본값 설정 (예: 'dark' 색상 사용)
+  const selected =
+    color && buttonColors[color] ? buttonColors[color] : buttonColors.dark
   let _css = ''
   if (selected) {
     _css = `
       background: ${selected[0]};
       color: ${selected[1]};
     `
-    if (!['light', 'white'].includes(color)) {
+    if (!['light', 'white'].includes(color || '')) {
       _css += `
         border-color: ${selected[0]};
       `
@@ -130,6 +132,6 @@ export const ButtonGroup = styled.div<CommonType>`
   ${({ width }) =>
     width &&
     css`
-      width: ${width};
+      width: ${width}px;
     `}
 `

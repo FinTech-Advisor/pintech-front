@@ -1,13 +1,29 @@
 'use client'
 
 import JoinForm from '../components/JoinForm'
-import { useSearchParams } from 'next/navigation' // 'redirect' 제거
+import { useSearchParams } from 'next/navigation'
 import React, { useState, useCallback, useActionState } from 'react'
 import { processJoin } from '../services/actions'
 
 const JoinContainer = () => {
   const searchParams = useSearchParams()
-  const actionState = useActionState(processJoin, searchParams)
+
+  // searchParams를 Record<string, string[]> 타입으로 변환
+  const params = Array.from(searchParams.entries()).reduce(
+    (acc, [key, value]) => {
+      // 같은 키에 여러 값이 있을 경우 배열로 처리
+      if (acc[key]) {
+        acc[key].push(value)
+      } else {
+        acc[key] = [value]
+      }
+      return acc
+    },
+    {} as Record<string, string[]>,
+  )
+
+  const actionState = useActionState(processJoin, params)
+
   const [form, setForm] = useState({ gender: 'FEMALE' })
 
   const onChange = useCallback((e) => {

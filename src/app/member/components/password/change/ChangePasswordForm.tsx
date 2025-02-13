@@ -7,6 +7,7 @@ import { MediumButton } from '@/app/global/components/Buttons'
 import { Input } from '@/app/global/components/FormComponents'
 import { buttonColors } from '@/app/global/styles/colors'
 
+// 스타일링 적용
 const StyledForm = styled.form`
   button {
     background-color: ${buttonColors.dark[0]};
@@ -18,7 +19,26 @@ const StyledForm = styled.form`
   }
 `
 
-const ChangePasswordForm = ({ form, onChange, errors, onSubmit }) => {
+// ChangePasswordFormProps 인터페이스 수정
+interface ChangePasswordFormProps {
+  form?: {
+    currentPassword?: string
+    newPassword?: string
+    confirmPassword?: string
+  }
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+  errors?: Record<string, string>
+  onSubmit: React.FormEventHandler<HTMLFormElement>
+  isPending: boolean
+}
+
+const ChangePasswordForm: React.FC<ChangePasswordFormProps> = ({
+  form = {},
+  onChange,
+  errors = {},
+  onSubmit,
+  isPending,
+}) => {
   return (
     <StyledForm onSubmit={onSubmit} autoComplete="off">
       <Input
@@ -26,32 +46,34 @@ const ChangePasswordForm = ({ form, onChange, errors, onSubmit }) => {
         name="currentPassword"
         placeholder="현재 비밀번호"
         color="dark"
-        value={form?.currentPassword ?? ''}
+        value={form.currentPassword ?? ''}
         onChange={onChange}
       />
-      <Messages color="danger">{errors?.currentPassword}</Messages>
+      <Messages color="danger">{errors.currentPassword}</Messages>
 
       <Input
         type="password"
         name="newPassword"
         placeholder="새 비밀번호"
         color="dark"
-        value={form?.newPassword ?? ''}
+        value={form.newPassword ?? ''}
         onChange={onChange}
       />
-      <Messages color="danger">{errors?.newPassword}</Messages>
+      <Messages color="danger">{errors.newPassword}</Messages>
 
       <Input
         type="password"
         name="confirmPassword"
         placeholder="비밀번호 확인"
         color="dark"
-        value={form?.confirmPassword ?? ''}
+        value={form.confirmPassword ?? ''}
         onChange={onChange}
       />
-      <Messages color="danger">{errors?.confirmPassword}</Messages>
+      <Messages color="danger">{errors.confirmPassword}</Messages>
 
-      <MediumButton type="submit">비밀번호 변경</MediumButton>
+      <MediumButton type="submit" disabled={isPending}>
+        {isPending ? '처리 중...' : '비밀번호 변경'}
+      </MediumButton>
     </StyledForm>
   )
 }

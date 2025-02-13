@@ -1,4 +1,5 @@
 'use server'
+
 import { redirect } from 'next/navigation'
 import { format } from 'date-fns'
 import { cookies } from 'next/headers'
@@ -9,6 +10,7 @@ interface FormDataEntries {
   [key: string]: string | boolean
 }
 
+// 회원 가입 처리
 export const processJoin = async (
   params: { redirectUrl?: string },
   formData: FormData,
@@ -24,7 +26,7 @@ export const processJoin = async (
 
     let value: string | boolean = rawValue as string
 
-    if (key === 'birthDt' && value.trim()) {
+    if (key === 'birthDt' && typeof value === 'string' && value.trim()) {
       value = format(new Date(value), 'yyyy-MM-dd')
     }
 
@@ -95,36 +97,29 @@ export const processJoin = async (
 
   redirect(redirectUrl)
 }
-/**
- * 로그인 처리
- *
- * @param params
- * @param formData
- */
+
+// 로그인 처리
 export const processLogin = async (params, formData: FormData) => {
   const redirectUrl = params?.redirectUrl ?? '/'
 
-  let errors = {}
+  let errors: Record<string, string[]> = {}
   let hasErrors = false
 
-  // 필수 항목 검증 S
   const email = formData.get('email')
   const password = formData.get('password')
-  if (!email || !email.trim()) {
+
+  if (typeof email === 'string' && !email.trim()) {
     errors.email = errors.email ?? []
     errors.email.push('이메일을 입력하세요.')
     hasErrors = true
   }
 
-  if (!password || !password.trim()) {
+  if (typeof password === 'string' && !password.trim()) {
     errors.password = errors.password ?? []
     errors.password.push('비밀번호를 입력하세요.')
     hasErrors = true
   }
 
-  // 필수 항목 검증 E
-
-  // 서버 요청 처리 S
   if (!hasErrors) {
     const apiUrl = process.env.API_URL + '/member/login'
     try {
@@ -138,7 +133,6 @@ export const processLogin = async (params, formData: FormData) => {
 
       const result = await res.json()
       if (res.status === 200 && result.success) {
-        // 회원 인증 성공
         const cookie = await cookies()
         cookie.set('token', result.data, {
           httpOnly: true,
@@ -147,7 +141,6 @@ export const processLogin = async (params, formData: FormData) => {
           path: '/',
         })
       } else {
-        // 회원 인증 실패
         errors = result.message
         hasErrors = true
       }
@@ -155,23 +148,17 @@ export const processLogin = async (params, formData: FormData) => {
       console.error(err)
     }
   }
-  // 서버 요청 처리 E
 
   if (hasErrors) {
     return errors
   }
 
-  // 캐시 비우기
   revalidatePath('/', 'layout')
 
-  // 로그인 성공시 이동
   redirect(redirectUrl)
 }
 
-/**
- * 로그인한 회원 정보를 조회
- *
- */
+// 로그인한 회원 정보 조회
 export const getUserInfo = async () => {
   const cookie = await cookies()
   if (!cookie.has('token')) return
@@ -187,12 +174,13 @@ export const getUserInfo = async () => {
   }
 }
 
+// 비밀번호 찾기 처리
 export const processFindPassword = async (params, formData: FormData) => {
   const email = formData.get('email')
-  let errors = {}
+  let errors: Record<string, string[]> = {}
   let hasErrors = false
 
-  if (!email || !email.trim()) {
+  if (!email || (typeof email === 'string' && !email.trim())) {
     errors.email = errors.email ?? []
     errors.email.push('이메일을 입력하세요.')
     hasErrors = true
@@ -231,27 +219,36 @@ export const processFindPassword = async (params, formData: FormData) => {
   }
 }
 
+// 비밀번호 변경 처리
 export const processChangePassword = async (params, formData: FormData) => {
   const currentPassword = formData.get('currentPassword')
   const newPassword = formData.get('newPassword')
   const confirmPassword = formData.get('confirmPassword')
-  let errors = {}
+  let errors: Record<string, string[]> = {}
   let hasErrors = false
 
-  // 필수 항목 검증
-  if (!currentPassword || !currentPassword.trim()) {
+  if (
+    !currentPassword ||
+    (typeof currentPassword === 'string' && !currentPassword.trim())
+  ) {
     errors.currentPassword = errors.currentPassword ?? []
     errors.currentPassword.push('현재 비밀번호를 입력하세요.')
     hasErrors = true
   }
 
-  if (!newPassword || !newPassword.trim()) {
+  if (
+    !newPassword ||
+    (typeof newPassword === 'string' && !newPassword.trim())
+  ) {
     errors.newPassword = errors.newPassword ?? []
     errors.newPassword.push('새 비밀번호를 입력하세요.')
     hasErrors = true
   }
 
-  if (!confirmPassword || !confirmPassword.trim()) {
+  if (
+    !confirmPassword ||
+    (typeof confirmPassword === 'string' && !confirmPassword.trim())
+  ) {
     errors.confirmPassword = errors.confirmPassword ?? []
     errors.confirmPassword.push('비밀번호 확인을 입력하세요.')
     hasErrors = true
@@ -265,7 +262,6 @@ export const processChangePassword = async (params, formData: FormData) => {
     hasErrors = true
   }
 
-  // 서버 요청 처리
   if (!hasErrors) {
     const apiUrl = process.env.API_URL + '/member/change/password'
     try {
@@ -284,12 +280,11 @@ export const processChangePassword = async (params, formData: FormData) => {
       }
     } catch (err) {
       console.error(err)
-      errors = '서버와의 연결에 실패했습니다.'
+      errors = { general: ['서버와의 연결에 실패했습니다.'] } // 수정
       hasErrors = true
     }
   }
 
-  // 에러가 있을 경우 반환
   if (hasErrors) {
     return errors
   }
@@ -310,43 +305,54 @@ export const updateUserStatus = async ({
 }) => {
   try {
     const response = await fetch('/api/user/status', {
-      method: 'PATCH', // HTTP 메서드는 PATCH (부분 업데이트)
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json', // JSON 데이터로 전송
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId, deletedAt }), // 요청 본문에 사용자 ID와 삭제 날짜를 JSON 형식으로 전송
+      body: JSON.stringify({ userId, deletedAt }),
     })
 
     if (!response.ok) {
       throw new Error('회원 상태 업데이트 실패')
     }
 
-    return await response.json() // 성공적으로 처리된 응답을 JSON으로 반환
+    return await response.json()
   } catch (error) {
     console.error('회원 상태 업데이트 실패:', error)
-    throw new Error('회원 상태 업데이트 실패') // 실패 시 오류를 던짐
+    throw new Error('회원 상태 업데이트 실패')
   }
 }
 
-// 회원 탈퇴 처리 (소프트 탈퇴)
-export const processSignOut = async ({ userId }: { userId: string }) => {
+export const processSignOut = async (params: { seq: number }) => {
+  const { seq } = params
+
+  // 탈퇴할 회원의 ID가 유효한지 체크
+  if (!seq || typeof seq !== 'number') {
+    return { success: false, message: '유효하지 않은 회원 ID입니다.' }
+  }
+
   try {
-    const response = await fetch('/api/user/signout', {
-      method: 'POST', // HTTP 메서드는 POST (회원 탈퇴 요청)
+    // 회원 탈퇴 처리 - DB에서 deletedAt 컬럼을 현재 시간으로 업데이트
+    const apiUrl = `${process.env.API_URL}/member/delet/${seq}`
+
+    // 회원 탈퇴 요청 보내기
+    const response = await fetch(apiUrl, {
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json', // JSON 데이터로 전송
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId }), // 요청 본문에 사용자 ID를 JSON 형식으로 전송
     })
 
-    if (!response.ok) {
-      throw new Error('회원 탈퇴 처리 실패')
+    // 탈퇴 성공 여부 확인
+    if (response.ok) {
+      return { success: true, message: '회원 탈퇴가 완료되었습니다.' }
+    } else {
+      const result = await response.json()
+      return { success: false, message: result.message || '회원 탈퇴 실패' }
     }
-
-    return await response.json() // 성공적으로 처리된 응답을 JSON으로 반환
   } catch (error) {
-    console.error('회원 탈퇴 처리 실패:', error)
-    throw new Error('회원 탈퇴 처리 실패') // 실패 시 오류를 던짐
+    console.error('회원 탈퇴 중 오류 발생:', error)
+    return { success: false, message: '회원 탈퇴 중 오류가 발생했습니다.' }
   }
 }
 
@@ -358,29 +364,35 @@ export const processModify = async (params, formData: FormData) => {
   const optionalTerms = formData.get('optionalTerms')
   const authorities = formData.get('authorities')
 
-  let errors = {}
+  let errors: Record<string, string[]> = {}
   let hasErrors = false
 
   // 필수 항목 검증
-  if (!name || !name.trim()) {
+  if (!name || (typeof name === 'string' && !name.trim())) {
     errors.name = errors.name ?? []
     errors.name.push('이름을 입력하세요.')
     hasErrors = true
   }
 
-  if (!phoneNumber || !phoneNumber.trim()) {
+  if (
+    !phoneNumber ||
+    (typeof phoneNumber === 'string' && !phoneNumber.trim())
+  ) {
     errors.phoneNumber = errors.phoneNumber ?? []
     errors.phoneNumber.push('휴대폰번호를 입력하세요.')
     hasErrors = true
   }
 
-  if (!address || !address.trim()) {
+  if (!address || (typeof address === 'string' && !address.trim())) {
     errors.address = errors.address ?? []
     errors.address.push('주소를 입력하세요.')
     hasErrors = true
   }
 
-  if (!optionalTerms || !optionalTerms.trim()) {
+  if (
+    !optionalTerms ||
+    (typeof optionalTerms === 'string' && !optionalTerms.trim())
+  ) {
     errors.optionalTerms = errors.optionalTerms ?? []
     errors.optionalTerms.push('광고성 정보 전송 동의 여부를 확인하세요.')
     hasErrors = true
@@ -412,7 +424,7 @@ export const processModify = async (params, formData: FormData) => {
       }
     } catch (err) {
       console.error(err)
-      errors = '서버와의 연결에 실패했습니다.'
+      errors = { general: ['서버와의 연결에 실패했습니다.'] } // 수정
       hasErrors = true
     }
   }
