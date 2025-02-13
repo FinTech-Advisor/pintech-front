@@ -7,8 +7,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: '핀테크 포토폴리오',
-  description: '금융 api 프로젝트',
+  title: '핀테크 프로젝트',
+  description: '게시판 댓글 메시지',
 }
 export default function RootLayout({
   children,
