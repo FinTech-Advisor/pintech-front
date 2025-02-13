@@ -1,23 +1,22 @@
+// Context - 전역 공유하는 값
 'use client'
+
 import { createContext, useState } from 'react'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { setDefaultLocale } from 'react-datepicker'
 import { ko } from 'date-fns/locale'
+
 setDefaultLocale(ko.code)
 
 type ContextType = {
   state?: { title?: string }
-  actions: {
-  setTitle: (title: string) => void
-  }
+  actions?: { setTitle?: any }
 }
 
-  const CommonContext = createContext<ContextType>({
-    actions: { setTitle: () => {} }
-    })
+const CommonContext = createContext<ContextType>({})
 
 const CommonProvider = ({ children }) => {
-  const [title, setTitle] = useState <string | undefined>()
+  const [title, setTitle] = useState<any>()
 
   const value: ContextType = {
     state: { title },
@@ -35,6 +34,9 @@ const CommonProvider = ({ children }) => {
     </CommonContext.Provider>
   )
 }
+
 const { Consumer: CommonConsumer } = CommonContext
+
 export { CommonProvider, CommonConsumer }
+
 export default CommonContext

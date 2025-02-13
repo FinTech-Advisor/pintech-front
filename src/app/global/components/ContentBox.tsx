@@ -1,8 +1,11 @@
 'use client'
-import { styled } from 'styled-components'
+
+import styled from 'styled-components'
 import colors from '../styles/colors'
-import { CommonType } from '../types/StyledType'
+import type { CommonType } from '../types/StyledType'
+
 const { dark } = colors
+
 export const MainContentBox = styled.section<CommonType>`
   max-width: ${({ max }) => max || 750}px;
   min-width: ${({ min }) => min || 650}px;

@@ -8,4 +8,11 @@ export type CommonType = {
   type?: string | undefined
   disabled?: boolean | undefined
   placeholder?: string
+  name?: string
+  value?: string
+  className?: string
+}
+
+export type SelectType = CommonType & {
+  options?: { value: string; label: string }[]
 }

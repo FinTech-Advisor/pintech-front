@@ -1,5 +1,4 @@
 'use client'
-
 import { useContext, useEffect } from 'react'
 import UserContext from '../contexts/UserContext'
 import { getUserInfo } from '../../member/services/actions'

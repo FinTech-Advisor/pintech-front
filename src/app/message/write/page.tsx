@@ -1,4 +1,14 @@
+import { MainTitle } from '@/app/global/components/StyledTitle'
+import { MainContentBox } from '@/app/global/components/ContentBox'
+
 const WritePage = () => {
-  return <h1>쪽지 작성</h1>
+  return (
+    <>
+      <MainContentBox max={750} min={650}>
+        <MainTitle></MainTitle>
+      </MainContentBox>
+    </>
+  )
 }
+
 export default WritePage

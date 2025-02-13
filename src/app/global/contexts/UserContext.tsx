@@ -1,35 +1,24 @@
+// 로그인 회원 정보 전역 유지
 'use client'
-import { createContext, useState, Dispatch, SetStateAction } from 'react'
 
-type UserState = {
-  userInfo: any | undefined
-  isLogin: boolean
-  isAdmin: boolean
-}
+import { createContext, useState } from 'react'
 
-type UserActions = {
-  setUserInfo: Dispatch<SetStateAction<any | undefined>>
-  setIsLogin: Dispatch<SetStateAction<boolean>>
-  setIsAdmin: Dispatch<SetStateAction<boolean>>
-}
-
-const UserContext = createContext<{
-  state: UserState
-  actions: UserActions
-}>({
+const UserContext = createContext({
   state: { userInfo: undefined, isLogin: false, isAdmin: false },
   actions: {
-    setUserInfo: () => {},
-    setIsLogin: () => {},
-    setIsAdmin: () => {},
+    setUserInfo: undefined,
+    setIsLogin: undefined,
+    setIsAdmin: undefined,
   },
 })
 
-const UserProvider = ({ children, _userInfo }: { children: React.ReactNode; _userInfo?: any }) => {
-  const [userInfo, setUserInfo] = useState<any | undefined>(_userInfo)
-  const [isLogin, setIsLogin] = useState(!!_userInfo)
+const UserProvider = ({ children, _userInfo }) => {
+  const [userInfo, setUserInfo] = useState(_userInfo)
+
+  const [isLogin, setIsLogin] = useState(_userInfo ? true : false)
+
   const [isAdmin, setIsAdmin] = useState(
-    !!(_userInfo?._authorities?.includes('ADMIN'))
+    _userInfo && _userInfo._authorities.includes('ADMIN'),
   )
 
   const value = {
@@ -43,4 +32,5 @@ const UserProvider = ({ children, _userInfo }: { children: React.ReactNode; _use
 const { Consumer: UserConsumer } = UserContext
 
 export { UserProvider, UserConsumer }
+
 export default UserContext

@@ -1,5 +1,14 @@
-import React from 'react'
+import { MainTitle } from '@/app/global/components/StyledTitle'
+import { MainContentBox } from '@/app/global/components/ContentBox'
+
 const ListPage = () => {
-  return <></>
+  return (
+    <>
+      <MainContentBox max={750} min={650}>
+        <MainTitle></MainTitle>
+      </MainContentBox>
+    </>
+  )
 }
-export default React.memo(ListPage)
+
+export default ListPage

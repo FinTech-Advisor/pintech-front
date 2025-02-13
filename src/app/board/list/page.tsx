@@ -1,10 +1,14 @@
-import React from "react"
-const listsavePage = () => {
-  return(
+import { MainTitle } from '@/app/global/components/StyledTitle'
+import { MainContentBox } from '@/app/global/components/ContentBox'
+
+const ListPage = () => {
+  return (
     <>
-      <h1>게시글 작성 및 수정</h1>
+      <MainContentBox max={750} min={650}>
+        <MainTitle></MainTitle>
+      </MainContentBox>
     </>
   )
 }
 
-export default React.memo(listsavePage)
+export default ListPage

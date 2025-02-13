@@ -1,20 +1,18 @@
 'use client'
-import React from 'react'
 import loadable from '@loadable/component'
-import { MainContentBox } from "@/app/global/components/ContentBox"
-import { MainTitle } from "@/app/global/components/StyledTitle"
-const LoginContainer = loadable(() => {
-  return import('../containers/LoginContainer');
-});
+import WithGuestContainer from '@/app/global/containers/WithGuestContainer'
+import { MainContentBox } from '@/app/global/components/ContentBox'
+import { MainTitle } from '@/app/global/components/StyledTitle'
+
+const LoginContainer = loadable(() => import('../containers/LoginContainer'))
 
 const LoginPage = () => {
-
-  return (
-    <MainContentBox>
-      <h1>로그인</h1>
-      <LoginContainer/>
-    </MainContentBox>
+  return WithGuestContainer(
+    <MainContentBox max={450} min={350}>
+      <MainTitle>로그인</MainTitle>
+      <LoginContainer />
+    </MainContentBox>,
   )
 }
 
-export default React.memo(LoginPage)
+export default LoginPage

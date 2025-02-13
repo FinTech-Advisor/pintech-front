@@ -1,8 +1,12 @@
 'use client'
+
 import React from 'react'
 import { styled } from 'styled-components'
 import colors from '../../styles/colors'
+//import sizes from '../../styles/sizes'
+
 const { dark, light } = colors
+// const { medium, big } = sizes
 
 const StyledFooter = styled.footer`
   background: ${dark};
