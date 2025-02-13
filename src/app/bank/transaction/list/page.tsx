@@ -1,10 +1,12 @@
-import Link from "next/link"
+import React from "react"
+import { MainTitle } from "@/app/global/components/StyledTitle"
+import BankContainer from "../../containers/BankContainer"
 
 const DealListPage = () => {
   return (
     <>
-      <h1>거래내역 목록 조회</h1>
-      <Link href="/bank/transaction/info/1">test</Link>
+      <BankContainer />
+      <MainTitle>거래내역 목록 조회</MainTitle>
     </>
   )
 }

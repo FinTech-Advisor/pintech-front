@@ -1,12 +1,14 @@
-import Link from "next/link"
+import React from "react"
+import { MainTitle } from "@/app/global/components/StyledTitle"
+import BankContainer from "../../containers/BankContainer"
 
 const AccountListPage = () => {
   return (
     <>
-      <h1>계좌 목록 조회</h1>
-      <Link href="/bank/account/view/12">test</Link>
+      <BankContainer />
+      <MainTitle>계좌 목록 조회</MainTitle>
     </>
   )
 }
 
-export default AccountListPage
+export default React.memo(AccountListPage)
