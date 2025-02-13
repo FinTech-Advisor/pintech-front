@@ -10,10 +10,14 @@ setDefaultLocale(ko.code)
 
 type ContextType = {
   state?: { title?: string }
-  actions?: (setTitle?: any)  => void
+  actions: {
+  setTitle: (title: string) => void
+  }
 }
 
-const CommonContext = createContext<ContextType>({})
+  const CommonContext = createContext<ContextType>({
+    actions: { setTitle: () => {} }
+    })
 
 const CommonProvider = ({ children }) => {
   const [title, setTitle] = useState<string | undefined>()

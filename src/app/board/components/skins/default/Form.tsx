@@ -81,20 +81,24 @@ const Form = ({
 
           <div className="row content-row">
             {useEditor ? (
-              <Editor onChange={onEditorChange} height={350} useImage={useEditorImage} gid={data?.gid} location="editor"/>
+              <Editor
+                onChange={onEditorChange}
+                useImage={useEditorImage}
+                gid={data?.gid}
+                location="editor"
+              />
             ) : (
               <Textarea
                 name="content"
                 value={data?.content ?? ''}
                 onChange={onChange}
-                placeholder="내용을 입력하세요."
+                placeholder="내용을 입력하세요"
               />
             )}
             <Messages color="danger">{errors?.content}</Messages>
           </div>
-
-          <BigButton type="submit" disabled={isPending}>
-            {data?.mode === 'edit' ? '수정하기' : '작성하기'}
+          <BigButton type="submit" disabled={isPending} color="primary">
+            {data?.mode === 'edit' ? '수정' : '작성'}
           </BigButton>
         </StyledForm>
       </MainContentBox>

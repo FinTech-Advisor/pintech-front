@@ -1,3 +1,4 @@
+
 /**
  * 객체 값을 QueryString으로 변환하는 편의 기능
  */
@@ -16,3 +17,4 @@ export const toQueryString = (data: object) => {
 
 // useSWR용
 export const fetcher = (url) => fetch(url).then((r) => r.json())
+

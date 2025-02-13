@@ -1,6 +1,7 @@
 'use client'
 import React, { useMemo } from 'react'
 import ReactQuill from 'react-quill-new'
+import { getToken } from '../libs/apiRequest'
 
 type Props = {
   content?: string
@@ -43,7 +44,7 @@ const Editor = ({
       fileEl.multiple = true
       fileEl.click()
 
-      fileEl.addEventListener('change', (e: any) => {
+      fileEl.addEventListener('change', async (e: any) => {
         const files = e.target.files
         const formData = new FormData()
         formData.append('gid', gid)
@@ -54,9 +55,21 @@ const Editor = ({
           formData.append('file', file)
         }
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL + '/file/upload'
-
         ;(async () => {
+          // const apiUrl = process.env.NEXT_PUBLIC_API_URL + '/file/upload'
+          const apiUrl = 'https://cis-file-service.onedu.blue/upload'
+          const token = getToken()
+
+          const options = {
+            method: 'POST',
+            body: formData,
+          }
+
+          if(token && token.trim()){
+            options.headers = {
+              Authorization: `;`
+            }
+          }
           const res = await fetch(apiUrl, {
             method: 'POST',
             body: formData,
@@ -87,6 +100,7 @@ const Editor = ({
 
   return (
     <ReactQuill
+      ref={editor}
       theme="snow"
       value={content ?? ''}
       onChange={onChange}

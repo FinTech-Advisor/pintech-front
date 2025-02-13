@@ -21,7 +21,7 @@ const BoardFormController = ({ bid, seq }: Props) => {
     mode: seq ? 'edit' : 'write',
     gid: '' + Date.now(),
   })
-  const [, setTitle] = useMainTitle(undefined)
+  const setTitle = useMainTitle(undefined)
   const actionState = useActionState(updateBoard, undefined)
 
   const onChange = useCallback((e) => {
