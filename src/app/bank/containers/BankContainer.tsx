@@ -24,6 +24,7 @@ const StyledMenu = styled.nav`
     line-height: 45px;
     font-size: ${medium};
     padding: 0 35px;
+    margin: 0 auto;
 
     &.on {
       color: ${white};
@@ -44,7 +45,6 @@ const BankContainer = () => {
                     </Link>
                 ))}
             </StyledMenu>
-            <BankForm />
         </>
     ) 
 }

@@ -1,5 +1,16 @@
+import { MainTitle } from "@/app/global/components/StyledTitle"
+import LoanContainer from "../../containers/LoanContainer"
+import { MainContentBox } from "@/app/global/components/ContentBox"
+
 const RecommendListPage = () => {
-    return <h1>추천 대출 로그 목록 조회</h1>
+    return (
+      <>
+        <MainContentBox>
+          <LoanContainer/>
+          <MainTitle>대출 추천</MainTitle>
+        </MainContentBox>
+      </>
+    )
   }
   
   export default RecommendListPage
