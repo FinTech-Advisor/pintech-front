@@ -1,5 +1,16 @@
+import { MainTitle } from "@/app/global/components/StyledTitle"
+import CardContainer from "../../containers/CardContainer"
+import { MainContentBox } from "@/app/global/components/ContentBox"
+
 const RecommendListPage = () => {
-    return <h1>카드 추천 받은 내역 목록 조회</h1>
+    return (
+      <>
+        <MainContentBox>
+          <CardContainer/>
+          <MainTitle>추천카드</MainTitle>
+        </MainContentBox>
+      </>
+    )
   }
   
   export default RecommendListPage

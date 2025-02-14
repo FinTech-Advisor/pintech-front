@@ -12,15 +12,16 @@ export default function useUser() {
   useEffect(() => {
     if (!userInfo) {
       ;(async () => {
-        let _userInfo = await getUserInfo()
+        const _userInfo = await getUserInfo()
         if (_userInfo) {
           setUserInfo(_userInfo)
-          setIsLogin(_userInfo ? true : false)
-          setIsAdmin(_userInfo && _userInfo._authorities.includes('ADMIN'))
+          setIsLogin(true)
+        } else {
+          setIsLogin(false)
         }
       })()
     }
   }, [userInfo, setUserInfo, setIsLogin, setIsAdmin])
 
-  return { userInfo, isLogin, isAdmin }
+  return { userInfo, isLogin, isAdmin } // isAdmin 추가
 }

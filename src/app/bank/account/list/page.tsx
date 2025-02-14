@@ -1,10 +1,16 @@
-import Link from "next/link"
+'use client'
+import { MainTitle } from "@/app/global/components/StyledTitle"
+import BankContainer from "../../containers/BankContainer"
+import { MainContentBox } from "@/app/global/components/ContentBox"
 
 const AccountListPage = () => {
   return (
     <>
-      <h1>계좌 목록 조회</h1>
-      <Link href="/bank/account/view/12">test</Link>
+      <MainContentBox>
+        <BankContainer />
+        <MainTitle>계좌 목록 조회</MainTitle>
+      </MainContentBox>
+      
     </>
   )
 }

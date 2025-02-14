@@ -150,9 +150,9 @@ const Header = () => {
       {/* logo-search */}
       <StyledMenu>
         <div className="layout-width">
-          <a href="#">메뉴1</a>
-          <a href="#">메뉴2</a>
-          <a href="#">메뉴3</a>
+          <Link href="/bank/account/list">금융</Link>
+          <a href="/card/list">카드</a>
+          <a href="/loan/list">대출</a>
         </div>
       </StyledMenu>
     </StyledHeader>

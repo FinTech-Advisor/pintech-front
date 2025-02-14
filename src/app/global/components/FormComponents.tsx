@@ -1,7 +1,8 @@
 'use client'
-import { styled, css } from 'styled-components'
+import styled, { css } from 'styled-components'
 import colors from '../styles/colors'
 import sizes from '../styles/sizes'
+import type { CommonType } from '../types/StyledType'
 const { light, dark } = colors
 const { normal } = sizes
 
@@ -18,7 +19,7 @@ const commonStyle = css`
 `
 
 /* 입력 항목 */
-export const Input = styled.input`
+export const Input = styled.input<CommonType>`
   ${commonStyle}
   height: 40px;
   border-color: ${({ color }) => (color ? colors[color] ?? light : light)};
@@ -26,7 +27,7 @@ export const Input = styled.input`
     width: ${width}px;
   `}
 `
-export const Textarea = styled.textarea`
+export const Textarea = styled.textarea<CommonType>`
   ${commonStyle}
   height: 150px;
   resize: none;

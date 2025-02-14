@@ -1,5 +1,16 @@
+import { MainTitle } from "@/app/global/components/StyledTitle"
+import CardContainer from "../../containers/CardContainer"
+import { MainContentBox } from "@/app/global/components/ContentBox"
+
 const UserListPage = () => {
-    return <h1>유저 카드 목록 조회</h1>
+    return (
+      <>
+        <MainContentBox>
+          <CardContainer/>
+          <MainTitle>사용자 카드 목록</MainTitle>
+        </MainContentBox>
+      </>
+    ) 
   }
   
   export default UserListPage
