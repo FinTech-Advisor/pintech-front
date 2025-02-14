@@ -5,8 +5,8 @@ import { getUserInfo } from '../../member/services/actions'
 
 export default function useUser() {
   const {
-    state: { userInfo, isLogin },
-    actions: { setUserInfo, setIsLogin },
+    state: { userInfo, isLogin, isAdmin },
+    actions: { setUserInfo, setIsLogin, setIsAdmin },
   } = useContext(UserContext)
 
   useEffect(() => {
@@ -15,11 +15,13 @@ export default function useUser() {
         const _userInfo = await getUserInfo()
         if (_userInfo) {
           setUserInfo(_userInfo)
-          setIsLogin(_userInfo ? true : false)
+          setIsLogin(true)
+        } else {
+          setIsLogin(false)
         }
       })()
     }
-  }, [userInfo, setUserInfo, setIsLogin ])
+  }, [userInfo, setUserInfo, setIsLogin, setIsAdmin])
 
-  return { userInfo, isLogin }
+  return { userInfo, isLogin, isAdmin } // isAdmin 추가
 }
