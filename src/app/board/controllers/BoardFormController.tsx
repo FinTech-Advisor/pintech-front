@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useLayoutEffect, useCallback, useActionState } from 'react'
-import { updateBoard } from '../services/actions'
+import { updateBoard, get} from '../services/actions'
 import useSkin from '../hooks/useSkin'
 import useMainTitle from '@/app/global/hooks/useMainTitle'
 import { getBoard } from '../services/actions'
@@ -40,6 +40,20 @@ const BoardFormController = ({ bid, seq }: Props) => {
     setData((data) => ({ ...data, [field]: value }))
   }, [])
 
+  //게시판수정
+  useLayoutEffect(()=>{
+    (async()=>{
+      if(seq) {
+        const _data = await get(seq)
+        if(!_data || !_data.board) {
+          return
+        }
+        setData(_data)
+        setData(_data.board)
+      }
+    })()
+  }, [seq])
+
   useLayoutEffect(() => {
     ;(async () => {
       if (bid) {
@@ -58,6 +72,10 @@ const BoardFormController = ({ bid, seq }: Props) => {
       }
     })()
   }, [bid, setTitle])
+
+  if ((bid && !board) || (seq && !data)){
+    notFound()
+  }
 
   const Form = useSkin(board?.skin, 'form')
 

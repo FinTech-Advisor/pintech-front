@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import type { CommonType } from '../types/StyledType'
 import { getToken } from '../libs/apiRequest'
 import FileItems from './FileItems'
+import useDelete from '@/app/board/hooks/useDelete'
+import useFileupload from '../hooks/useFileUpload'
 
 const Wrapper = styled.div<CommonType>`
   padding-bottom: 50px;
@@ -51,6 +53,9 @@ const Editor = ({
     [width, height],
   )
 
+  const onDeleteFile = useDelete(setFiles)
+  const processUpload = useFileupload(setFiles, editor) 
+
   const modules = useMemo(() => {
     const imageUploader = () => {
       const fileEl = document.createElement('input')
@@ -70,40 +75,7 @@ const Editor = ({
           formData.append('file', file)
         }
 
-        ;(async () => {
-          // const apiUrl = process.env.NEXT_PUBLIC_API_URL + '/file/upload'
-          const apiUrl = 'https://cis-file-service.onedu.blue/upload'
-          const token = await getToken()
-          const options: RequestInit = {
-            method: 'POST',
-            body: formData,
-          }
-
-          if (token && token.trim()) {
-            options.headers = {
-              Authorization: `Bearer ${token}`,
-            }
-          }
-
-          const res = await fetch(apiUrl, options)
-          const result = await res.json()
-          if (
-            editor &&
-            result.success &&
-            result.data &&
-            result.data.length > 0
-          ) {
-            const _editor = editor.current.getEditor()
-            const cursor = _editor.getSelection()
-            for (let { fileUrl } of result.data) {
-              fileUrl = fileUrl.replace('http:', 'https:').replace(':80', '')
-
-              _editor.insertEmbed(cursor.index, 'image', fileUrl)
-            }
-
-            setFiles(result.data)
-          }
-        })()
+        processUpload(formDatag)
       })
     }
 
@@ -134,7 +106,7 @@ const Editor = ({
     [editor],
   )
 
-  const onDeleteFile = useCallback((seq) => {}, [])
+
 
   const onEditorChange = useCallback(
     (content) => {

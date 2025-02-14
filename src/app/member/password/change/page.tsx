@@ -1,22 +1,20 @@
-'use client'
+import React from 'react'
+import ChangePasswordContainer from '../../containers/password/change/ChangePasswordContainer'
 import { MainTitle } from '@/app/global/components/StyledTitle'
 import { MainContentBox } from '@/app/global/components/ContentBox'
-import loadable from '@loadable/component'
-import WithGuestContainer from '@/app/global/containers/WithGuestContainer'
-
-const ChangeContainer = loadable(
-  () => import('../../containers/ChangeContainer'),
-)
-
-const ChangePage = () => {
-  return WithGuestContainer(
+import { Suspense } from 'react'
+const ChangePasswordPage = () => {
+  return (
     <>
-      <MainContentBox max={450} min={350}>
-        <MainTitle>비밀번호 변경</MainTitle>
-        <ChangeContainer />
-      </MainContentBox>
-    </>,
+      <Suspense fallback={<div>Loading...</div>}>
+        <MainContentBox max={750} min={650}>
+          <MainTitle>비밀번호 변경</MainTitle>
+
+          <ChangePasswordContainer />
+        </MainContentBox>
+      </Suspense>
+    </>
   )
 }
 
-export default ChangePage
+export default ChangePasswordPage

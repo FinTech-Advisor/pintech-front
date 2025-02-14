@@ -1,20 +1,16 @@
-'use client'
+import FindPasswordContainer from '../../containers/password/find/FindPasswordContainer'
 import { MainTitle } from '@/app/global/components/StyledTitle'
 import { MainContentBox } from '@/app/global/components/ContentBox'
-import loadable from '@loadable/component'
-import WithGuestContainer from '@/app/global/containers/WithGuestContainer'
 
-const FindContainer = loadable(() => import('../../containers/FindContainer'))
-
-const FindPage = () => {
-  return WithGuestContainer(
+const FindPasswordPage = () => {
+  return (
     <>
-      <MainContentBox max={450} min={350}>
+      <MainContentBox max={750} min={650}>
         <MainTitle>비밀번호 찾기</MainTitle>
-        <FindContainer />
+        <FindPasswordContainer />
       </MainContentBox>
-    </>,
+    </>
   )
 }
 
-export default FindPage
+export default FindPasswordPage
