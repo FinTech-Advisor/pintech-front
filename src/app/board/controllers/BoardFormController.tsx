@@ -10,7 +10,6 @@ import { updateBoard } from '../services/actions'
 import useSkin from '../hooks/useSkin'
 import useMainTitle from '@/app/global/hooks/useMainTitle'
 import { getBoard } from '../services/actions'
-import { notFound } from 'next/navigation'
 import useUser from '@/app/global/hooks/useUser'
 
 type Props = {
@@ -20,7 +19,7 @@ type Props = {
 
 type Board = {
   name: string
-  skin: 'default' | 'gallery' // 🔥 'string' → 정확한 타입 지정
+  skin: 'default' | 'gallery'
 }
 
 type FormData = {
@@ -56,7 +55,7 @@ const BoardFormController = ({ bid, seq }: Props) => {
     [],
   )
 
-  const [actionState] = useActionState(updateBoard, null) // ✅ undefined → null로 변경
+  const [actionState] = useActionState(updateBoard, null)
 
   const onClick = useCallback((field: string, value: string | boolean) => {
     setData((prevData) => ({ ...prevData, [field]: value }))
@@ -67,37 +66,68 @@ const BoardFormController = ({ bid, seq }: Props) => {
       if (bid) {
         try {
           const _board = await getBoard(bid)
-          if (!_board) notFound()
+          console.log('Fetched board data:', _board) // ✅ 데이터 확인용 로그
 
-          if (typeof setTitle === 'function') {
-            setTitle(_board.name)
+          if (_board) {
+            setBoard(_board)
+            if (typeof setTitle === 'function') {
+              setTitle(
+                seq ? `${_board.name} - 글 수정` : `${_board.name} - 글 작성`,
+              )
+            }
+          } else {
+            console.warn('Board data is null or undefined') // ✅ 오류 방지용 로그
+            setBoard({ name: '게시판 없음', skin: 'default' }) // 🔥 기본값 설정
+            if (typeof setTitle === 'function') {
+              setTitle(seq ? '게시글 수정' : '새 글 작성')
+            }
           }
-          setBoard(_board)
         } catch (err) {
-          console.error(err)
-          notFound()
+          console.error('Error fetching board:', err)
+          setBoard({ name: '게시판 없음', skin: 'default' }) // 🔥 기본값 설정
+          if (typeof setTitle === 'function') {
+            setTitle(seq ? '게시글 수정' : '새 글 작성')
+          }
+        }
+      } else {
+        setBoard({ name: '새 게시판', skin: 'default' }) // 🔥 bid가 없을 때 기본값
+        if (typeof setTitle === 'function') {
+          setTitle(seq ? '게시글 수정' : '새 글 작성')
         }
       }
     })()
-  }, [bid, setTitle])
+  }, [bid, seq, setTitle])
 
-  // 🔥 board?.skin이 'default' | 'gallery'가 아닐 경우 기본값 'default' 적용
+  useLayoutEffect(() => {
+    if (!seq && isLogin) {
+      setData((prevData) => ({
+        ...prevData,
+        poster: userInfo.name,
+      }))
+    }
+  }, [isLogin, seq, userInfo])
+
   const skinType: 'default' | 'gallery' =
     board?.skin === 'gallery' ? 'gallery' : 'default'
 
   const Form = useSkin(skinType, 'form')
+  console.log('Loaded Form component:', Form) // ✅ Form 확인
 
   return (
-    Form && (
-      <Form
-        board={board}
-        data={data}
-        onEditorChange={onEditorChange}
-        onChange={onChange}
-        onClick={onClick}
-        actionState={actionState}
-      />
-    )
+    <>
+      {Form ? (
+        <Form
+          board={board}
+          data={data}
+          onEditorChange={onEditorChange}
+          onChange={onChange}
+          onClick={onClick}
+          actionState={actionState}
+        />
+      ) : (
+        <div>폼을 불러오는 중입니다...</div>
+      )}
+    </>
   )
 }
 
