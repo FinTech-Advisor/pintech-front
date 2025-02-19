@@ -1,13 +1,12 @@
 'use client'
-import React from "react"
-import useMenuCode from "@/app/global/hooks/useMenuCode"
-import BankForm from "../components/BankForm"
-import Link from "next/link"
-import styled from "styled-components"
-import colors from "@/app/global/styles/colors"
-import sizes from "@/app/global/styles/sizes"
-import { menus } from "@/app/global/datas/menus"
-
+import React from 'react'
+import useMenuCode from '@/app/global/hooks/useMenuCode'
+import BankForm from '../components/BankForm'
+import Link from 'next/link'
+import styled from 'styled-components'
+import colors from '@/app/global/styles/colors'
+import sizes from '@/app/global/styles/sizes'
+import { menus } from '@/app/global/datas/menus'
 
 const { dark, white } = colors
 const { medium } = sizes
@@ -34,19 +33,19 @@ const StyledMenu = styled.nav`
 `
 
 const BankContainer = () => {
-    useMenuCode('bank', 'bankForm')
+  useMenuCode('bank', 'bankForm')
 
-    return (
-        <>
-            <StyledMenu>
-                {menus.bank.map((item) => (
-                    <Link key={item.code} href={item.url}>
-                        {item.name}
-                    </Link>
-                ))}
-            </StyledMenu>
-        </>
-    ) 
+  return (
+    <>
+      <StyledMenu>
+        {menus.bank.map((item) => (
+          <Link key={item.code} href={item.url}>
+            {item.name}
+          </Link>
+        ))}
+      </StyledMenu>
+    </>
+  )
 }
 
 export default React.memo(BankContainer)

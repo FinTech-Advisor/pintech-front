@@ -6,9 +6,9 @@ const ListPage = async () => {
   return (
     <>
       <MainContentBox max={750} min={650}>
+        <BoardListController />
         <MainTitle>게시판 목록</MainTitle>
       </MainContentBox>
-      <BoardListController />
     </>
   )
 }

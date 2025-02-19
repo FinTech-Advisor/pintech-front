@@ -12,9 +12,9 @@ type ParamType = {
 const EditPage = ({ params }) => {
   const { seq } = React.use<ParamType>(params)
   return (
-    <>
+    <MainContentBox>
       <BoardFormController seq={seq} />
-    </>
+    </MainContentBox>
   )
 }
 

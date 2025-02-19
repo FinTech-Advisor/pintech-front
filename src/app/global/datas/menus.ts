@@ -23,6 +23,11 @@ export const menus = {
     { code: 'recommendlist', name: '대출 추천', url: '/loan/recommend/list' },
     { code: 'userloanlist', name: '사용자 대출 목록', url: '/loan/user/list' },
   ],
+  board: [
+    { code: 'boardlist', name: '게시판 목록 조회', url: '/board/list' },
+    { code: 'boardwrite', name: '게시판 작성', url: '/board/write/{bid}' },
+    { code: 'boardedit', name: '게시판 수정', url: '/board/edit/{seq}' },
+  ],
 }
 
 export default function getMenus(menuCode) {

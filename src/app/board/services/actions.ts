@@ -51,7 +51,7 @@ export const updateBoard = async (params: BoardParams, formData: FormData) => {
   }
 
   const { locationAfterWriting } = await getBoard(form.bid as string)
-  let redirectUrl = `/board/list/${form.bid}`
+  let redirectUrl = `/board/write/${form.bid}`
 
   // 필수항목 검증 S
   const requiredFields: { [key: string]: string } = {
