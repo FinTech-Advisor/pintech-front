@@ -6,12 +6,18 @@ import React, {
   useCallback,
   useActionState,
 } from 'react'
-import { updateBoard } from '../services/actions'
+import { updateBoard, getBoard } from '../services/actions'
 import useSkin from '../hooks/useSkin'
 import useMainTitle from '@/app/global/hooks/useMainTitle'
-import { getBoard } from '../services/actions'
-import { notFound } from 'next/navigation'
 import useUser from '@/app/global/hooks/useUser'
+import { menus } from '@/app/global/datas/menus'
+import Link from 'next/link'
+import styled from 'styled-components'
+import colors from '@/app/global/styles/colors'
+import sizes from '@/app/global/styles/sizes'
+
+const { dark, white } = colors
+const { medium } = sizes
 
 type Props = {
   bid?: string
@@ -20,7 +26,7 @@ type Props = {
 
 type Board = {
   name: string
-  skin: 'default' | 'gallery' // 🔥 'string' → 정확한 타입 지정
+  skin: 'default' | 'gallery'
 }
 
 type FormData = {
@@ -32,6 +38,27 @@ type FormData = {
   notice?: boolean
   guestPw?: string
 }
+
+const StyledMenu = styled.nav`
+  box-shadow: 2px 2px 5px ${dark};
+  display: flex;
+  border-radius: 3px;
+  height: 45px;
+  margin-bottom: 40px;
+
+  a {
+    color: ${dark};
+    line-height: 45px;
+    font-size: ${medium};
+    padding: 0 35px;
+    margin: 0 auto;
+
+    &.on {
+      color: ${white};
+      background: ${dark};
+    }
+  }
+`
 
 const BoardFormController = ({ bid, seq }: Props) => {
   const { isLogin, userInfo } = useUser()
@@ -56,48 +83,90 @@ const BoardFormController = ({ bid, seq }: Props) => {
     [],
   )
 
-  const [actionState] = useActionState(updateBoard, null) // ✅ undefined → null로 변경
+  const [actionState] = useActionState(updateBoard, null)
 
   const onClick = useCallback((field: string, value: string | boolean) => {
     setData((prevData) => ({ ...prevData, [field]: value }))
   }, [])
 
   useLayoutEffect(() => {
-    ;(async () => {
-      if (bid) {
-        try {
-          const _board = await getBoard(bid)
-          if (!_board) notFound()
+    console.log('Received bid:', bid) // bid 값 확인
 
-          if (typeof setTitle === 'function') {
-            setTitle(_board.name)
-          }
+    if (!bid || bid === '{bid}') {
+      setBoard({ name: '새 게시판', skin: 'default' })
+      if (typeof setTitle === 'function') {
+        setTitle(seq ? '게시글 수정' : '새 글 작성')
+      }
+      return
+    }
+
+    ;(async () => {
+      try {
+        const _board = await getBoard(bid)
+
+        if (_board) {
+          console.log('Fetched board data:', _board)
           setBoard(_board)
-        } catch (err) {
-          console.error(err)
-          notFound()
+          if (typeof setTitle === 'function') {
+            setTitle(
+              seq ? `${_board.name} - 글 수정` : `${_board.name} - 글 작성`,
+            )
+          }
+        } else {
+          console.warn('Board data is null or undefined')
+          setBoard({ name: '게시판 없음', skin: 'default' })
+          if (typeof setTitle === 'function') {
+            setTitle(seq ? '게시글 수정' : '새 글 작성')
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching board:', err)
+        setBoard({ name: '게시판 없음', skin: 'default' })
+        if (typeof setTitle === 'function') {
+          setTitle(seq ? '게시글 수정' : '새 글 작성')
         }
       }
     })()
-  }, [bid, setTitle])
+  }, [bid, seq, setTitle])
 
-  // 🔥 board?.skin이 'default' | 'gallery'가 아닐 경우 기본값 'default' 적용
+  useLayoutEffect(() => {
+    if (!seq && isLogin) {
+      setData((prevData) => ({
+        ...prevData,
+        poster: userInfo.name,
+      }))
+    }
+  }, [isLogin, seq, userInfo])
+
   const skinType: 'default' | 'gallery' =
     board?.skin === 'gallery' ? 'gallery' : 'default'
 
   const Form = useSkin(skinType, 'form')
+  console.log('Loaded Form component:', Form)
 
   return (
-    Form && (
-      <Form
-        board={board}
-        data={data}
-        onEditorChange={onEditorChange}
-        onChange={onChange}
-        onClick={onClick}
-        actionState={actionState}
-      />
-    )
+    <>
+      <StyledMenu>
+        {menus.board.map((item) => (
+          <Link key={item.code} href={item.url}>
+            {item.name}
+          </Link>
+        ))}
+      </StyledMenu>
+
+      {Form ? (
+        <Form
+          board={board}
+          data={data}
+          onEditorChange={onEditorChange}
+          onChange={onChange}
+          onClick={onClick}
+          actionState={actionState}
+        />
+      ) : (
+        <div>폼을 불러오는 중입니다...</div>
+      )}
+    </>
   )
 }
 

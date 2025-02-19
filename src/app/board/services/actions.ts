@@ -51,7 +51,7 @@ export const updateBoard = async (params: BoardParams, formData: FormData) => {
   }
 
   const { locationAfterWriting } = await getBoard(form.bid as string)
-  let redirectUrl = `/board/list/${form.bid}`
+  let redirectUrl = `/board/write/${form.bid}`
 
   // 필수항목 검증 S
   const requiredFields: { [key: string]: string } = {
@@ -102,4 +102,16 @@ export const updateBoard = async (params: BoardParams, formData: FormData) => {
   }
 
   redirect(redirectUrl)
+}
+// 게시판 목록을 가져오는 함수
+export const getBoardList = async () => {
+  try {
+    // 예시로 '/api/boards'로 API 호출
+    const response = await apiRequest('/board/list')
+    const data = await response.json()
+    return data // 서버에서 받은 게시판 목록 반환
+  } catch (error) {
+    console.error('Failed to fetch board list:', error)
+    return [] // 에러 발생 시 빈 배열 반환
+  }
 }

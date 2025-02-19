@@ -1,15 +1,18 @@
 'use client'
+
 import React, { useState, useLayoutEffect } from 'react'
 import useSkin from '../hooks/useSkin'
-import { get } from '../services/actions'
+import { getBoard } from '../services/actions'
 
 const BoardViewController = ({ seq }) => {
   const [board, setBoard] = useState<any>()
+
   const [data, setData] = useState<any>()
 
   useLayoutEffect(() => {
     ;(async () => {
-      const _data = await get(seq)
+      const _data = await getBoard(seq)
+
       if (!_data || !_data.config) {
         return
       }
@@ -23,5 +26,4 @@ const BoardViewController = ({ seq }) => {
 
   return View && <View data={data} />
 }
-
 export default React.memo(BoardViewController)

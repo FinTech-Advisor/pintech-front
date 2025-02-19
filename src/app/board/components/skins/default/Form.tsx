@@ -13,13 +13,13 @@ import Editor from '@/app/global/components/Editor'
 const StyledForm = styled.form<CommonType>``
 
 interface FormProps {
-  board: {
+  board?: {
     name: string
     bid: string
     useEditor: boolean
     useEditorImage: boolean
     useAttachFile: boolean
-  }
+  } | null
   data: {
     gid: string
     poster: string
@@ -32,11 +32,13 @@ interface FormProps {
   }
   onEditorChange: (value: string) => void
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
-  actionState: [
-    errors: Record<string, string | undefined>,
-    formAction: string,
-    isPending: boolean,
-  ]
+  actionState:
+    | [
+        errors: Record<string, string | undefined>,
+        formAction: string,
+        isPending: boolean,
+      ]
+    | null
   onClick: (key: string, value: boolean) => void
 }
 
@@ -48,16 +50,18 @@ const Form = ({
   actionState,
   onClick,
 }: FormProps) => {
-  const [errors, formAction, isPending] = actionState
-  const { useEditor, useEditorImage } = board
+  const [errors, formAction, isPending] = Array.isArray(actionState)
+    ? actionState
+    : [{}, '', false]
 
+  const { useEditor = false, useEditorImage = false } = board ?? {}
   const { isLogin, isAdmin } = useUser()
 
   return (
     <MainContentBox max={750} min={650}>
-      <MainTitle>{board.name}</MainTitle>
+      <MainTitle>{board?.name ?? ''}</MainTitle>
       <StyledForm action={formAction} autoComplete="off">
-        <input type="hidden" name="bid" value={board.bid ?? ''} />
+        <input type="hidden" name="bid" value={board?.bid ?? ''} />
         <input type="hidden" name="gid" value={data.gid ?? ''} />
         <input type="hidden" name="content" value={data.content ?? ''} />
 
@@ -110,7 +114,7 @@ const Form = ({
         <div className="row content-row">
           {useEditor ? (
             <Editor
-              onChange={onEditorChange} // Corrected the prop name here
+              onChange={onEditorChange}
               useImage={useEditorImage}
               gid={data.gid}
               location="editor"

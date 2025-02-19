@@ -1,6 +1,7 @@
 import React from 'react'
 import BoardFormController from '../../controllers/BoardFormController'
-
+import { MainTitle } from '@/app/global/components/StyledTitle'
+import { MainContentBox } from '@/app/global/components/ContentBox'
 type ParamType = {
   bid?: string
   seq?: number
@@ -10,7 +11,11 @@ type ParamType = {
 
 const EditPage = ({ params }) => {
   const { seq } = React.use<ParamType>(params)
-  return <BoardFormController seq={seq} />
+  return (
+    <MainContentBox>
+      <BoardFormController seq={seq} />
+    </MainContentBox>
+  )
 }
 
 export default React.memo(EditPage)

@@ -4,6 +4,7 @@ import { FaFileUpload } from 'react-icons/fa'
 import { CgFileRemove } from 'react-icons/cg'
 import Editor from './Editor' // Make sure the path to Editor is correct
 import { CommonType } from '../types/StyledType'
+import classNames from 'classnames'
 type FileType = {
   seq: number
   fileName: string
@@ -25,6 +26,7 @@ type Props = {
   onInsertImage?: (url: string) => void
   onDeleteFile: (seq: number) => void
   onEditorChange?: (value: string) => void // Optional prop for Editor
+  className?: string
 }
 
 const _FileItem = ({
